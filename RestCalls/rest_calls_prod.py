@@ -5,36 +5,38 @@ import urllib3
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+ENDPOINT_URL = "https://photonq.at/api2"
+ACCESS_TOKEN = "<your access token>"
 
-def login(useremail, userpassword):
 
-    url = "https://quco.exp.univie.ac.at/api/login"
+# def login(useremail, userpassword):
 
-    payload = {'username': useremail,
-               'password': userpassword}
-    files = [
+#     url = "https://quco.exp.univie.ac.at/api/login"
 
-    ]
-    headers = {
-        'Cookie': 'csrftoken=a6IwyqS4I5vjwcNAT5Tm70PuiK7AFjcDVPHbyZy3I189V7eX5iK2m0AwJQoYyVUb; sessionid=5g4v77efjv0r99nziiourrzqocruyasl'
-    }
+#     payload = {'username': useremail,
+#                'password': userpassword}
+#     files = [
 
-    response = requests.request(
-        "POST", url, headers=headers, data=payload, files=files, verify=False)
-    return response.json()
-    # print(response.text)
+#     ]
+#     headers = {
+#         'Cookie': 'csrftoken=a6IwyqS4I5vjwcNAT5Tm70PuiK7AFjcDVPHbyZy3I189V7eX5iK2m0AwJQoYyVUb; sessionid=5g4v77efjv0r99nziiourrzqocruyasl'
+#     }
+
+#     response = requests.request(
+#         "POST", url, headers=headers, data=payload, files=files, verify=False)
+#     return response.json()
+#     # print(response.text)
 
 
 #login("zilk.felix@gmail.com", "123")
 
-def getexp_fromqueue(token):
+def getexp_fromqueue():
     """ """
-    auth_token = "Token " + token
-    url = "https://quco.exp.univie.ac.at/api/experiments/queue"
+    url = f"{ENDPOINT_URL}/experiments/queue"
 
     payload = {}
     headers = {
-        'Authorization': auth_token,
+        'Authorization': ACCESS_TOKEN,
         # 'Cookie': 'csrftoken=a6IwyqS4I5vjwcNAT5Tm70PuiK7AFjcDVPHbyZy3I189V7eX5iK2m0AwJQoYyVUb; sessionid=5g4v77efjv0r99nziiourrzqocruyasl'
     }
 
@@ -46,18 +48,16 @@ def getexp_fromqueue(token):
     # print(response.text)
 
 
-def poststatus_running(token, experimentId):
+def poststatus_running(experimentId):
     """ """
-    auth_token = "Token " + token
-    url = f"https://quco.exp.univie.ac.at/api/experiments/{experimentId}"
+    url = f"{ENDPOINT_URL}/api/experiments/{experimentId}"
 
     payload = {'status': 'RUNNING'}
     files = [
 
     ]
     headers = {
-        'Authorization': auth_token,
-        'Cookie': 'csrftoken=a6IwyqS4I5vjwcNAT5Tm70PuiK7AFjcDVPHbyZy3I189V7eX5iK2m0AwJQoYyVUb; sessionid=5g4v77efjv0r99nziiourrzqocruyasl'
+        'Authorization': ACCESS_TOKEN
     }
 
     response = requests.request(
@@ -68,10 +68,10 @@ def poststatus_running(token, experimentId):
 
 # post_running()
 
-def post_result(token, result):
+def post_result(result):
     """ """
-    auth_token = "Token " + token
-    url = "https://quco.exp.univie.ac.at/api/results"
+
+    url = f"{ENDPOINT_URL}/api/results"
     payload = result
     # payload = json.dumps({
     #     "totalCounts": "50000",
@@ -99,9 +99,8 @@ def post_result(token, result):
     #     }
     # })
     headers = {
-        'Authorization': auth_token,
-        'Content-Type': 'application/json',
-        'Cookie': 'csrftoken=a6IwyqS4I5vjwcNAT5Tm70PuiK7AFjcDVPHbyZy3I189V7eX5iK2m0AwJQoYyVUb; sessionid=5g4v77efjv0r99nziiourrzqocruyasl'
+        'Authorization': ACCESS_TOKEN,
+        'Content-Type': 'application/json'
     }
 
     response = requests.request(
@@ -111,18 +110,17 @@ def post_result(token, result):
 
 
 # post_result()
-def poststatus_done(token, experimentId):
+def poststatus_done(experimentId):
     """ """
-    auth_token = "Token " + token
-    url = f"https://quco.exp.univie.ac.at/api/experiments/{experimentId}"
+
+    url = f"{ENDPOINT_URL}/api/experiments/{experimentId}"
 
     payload = {'status': 'DONE'}
     files = [
 
     ]
     headers = {
-        'Authorization': auth_token,
-        'Cookie': 'csrftoken=a6IwyqS4I5vjwcNAT5Tm70PuiK7AFjcDVPHbyZy3I189V7eX5iK2m0AwJQoYyVUb; sessionid=5g4v77efjv0r99nziiourrzqocruyasl'
+        'Authorization': ACCESS_TOKEN
     }
 
     response = requests.request(
@@ -131,17 +129,16 @@ def poststatus_done(token, experimentId):
     print(response.text)
 
 
-def poststatus_failed(token, experimentId):
+def poststatus_failed(experimentId):
     """ """
-    url = f"https://quco.exp.univie.ac.at/api/experiments/{experimentId}"
+    url = f"{ENDPOINT_URL}/api/experiments/{experimentId}"
 
     payload = {'status': 'FAILED'}
     files = [
 
     ]
     headers = {
-        'Authorization': token,
-        'Cookie': 'csrftoken=a6IwyqS4I5vjwcNAT5Tm70PuiK7AFjcDVPHbyZy3I189V7eX5iK2m0AwJQoYyVUb; sessionid=5g4v77efjv0r99nziiourrzqocruyasl'
+        'Authorization': ACCESS_TOKEN
     }
 
     response = requests.request(

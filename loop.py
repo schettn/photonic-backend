@@ -1,4 +1,4 @@
-from RestCalls import rest_calls_prod, passwords
+from RestCalls import rest_calls_prod
 import json
 import time
 from ControlRunExperiment import RunExperiment
@@ -9,8 +9,6 @@ def Mainloop(on_time):
     mssg = 'Mainloop :: '
 
     print("Main loop will run for " + str(on_time) + " minutes.")
-
-    token = ""
 
     current_time = time.time()
 
@@ -29,8 +27,7 @@ def Mainloop(on_time):
 
         # returns {"detail":"Invalid token."} or {"detail":"Invalid token header. No credentials provided."} if no or wrong credentials
         # returns KeyError: 'experimentId' if no experiment is in Queue
-        task = rest_calls_prod.getexp_fromqueue(
-            token)
+        task = rest_calls_prod.getexp_fromqueue()
         # print(task)
         print(task)
         if "detail" not in task:
@@ -43,7 +40,7 @@ def Mainloop(on_time):
                 print(mssg + "task id: " + experimentId)
                 print(mssg + "Running")
                 rest_calls_prod.poststatus_running(
-                    token, experimentId)
+                    experimentId)
 
                 # For future: include test of setup/, calibration/validation
                 # Here: execute task
@@ -62,22 +59,16 @@ def Mainloop(on_time):
                 })
                 print(mssg + "Results determined")
                 rest_calls_prod.post_result(
-                    token, result)
+                    result)
                 print(mssg + "Results posted to API")
                 rest_calls_prod.poststatus_done(
-                    token, experimentId)
+                    experimentId)
                 print(mssg + "Status of " + experimentId + " updated")
 
             else:
                 print(mssg + "Empty queue")
         elif "detail" in task:
-            print(mssg + "Invalid credentials, generating new ...")
-            credentials = rest_calls_prod.login(
-                passwords.email, passwords.password)
-            # print(credentials)
-            token = credentials["token"]
-            print(mssg + "New token for you!")
-            # print(token)
+            print("Something went wrong with the credentials")
         else:
             pass
         time.sleep(5)
